@@ -19,6 +19,7 @@
 
     struct symbol *lookup( char * );
     void addref(int , char* , char*, int );
+    void printrefs();
 
     char *curfilename; /*当前输入文件的名称*/
 %}
@@ -147,5 +148,38 @@ static int symcompare(const void *xa, const void *xb){
         return -1;
     
     return strcmp(a->name, b->name);
+}
+
+void printrefs(){
+    struct symbol *sp;
+    char *prevfn = NULL;
+    
+    qsort(symtab, NHASH,sizeof(struct symbol), symcompare);
+    
+    for( sp = symtab ; sp->name && sp < symtab+NHASH; sp++) {
+        struct ref *rp = sp->reflist;
+        struct ref *rpp = 0;
+        struct ref *rpn;    
+        
+        do {
+            rpn = rp->next;
+            rp->next = rpp;
+            rpp = rp;
+            rp = rpn;
+        } while( rp );
+        
+        /*打印单词和它的引用*/
+        printf( "%10s",sp -> name );
+        for( rp = rpp; rp; rp = rp->next ){
+            if( rp -> filename == prevfn ){
+                printf( " %d", rp -> lineno );
+            } else {
+                printf(" %s:%d",rp->filename, rp->lineno);
+                prevfn = rp -> filename;
+            }
+        }
+        
+        printf("\n");
+    }
 }
 
