@@ -47,4 +47,59 @@ struct Symbol *lookUp( char *sym ){
     abort();
 }
 
+struct AbstractSyntaxTree* newAbstractSyntaxTree( int nodeType,
+        struct AbstractSyntaxTree *l, struct AbstractSyntaxTree *r){
+    struct AbstractSyntaxTree *a = 
+        (struct AbstractSyntaxTree*)malloc( sizeof(struct AbstractSyntaxTree) );
+
+    if( NULL == a ){
+        yyerror("out of space!");
+        exit(0);
+    }
+
+    a->nodeType = nodeType;
+    a->left = l;
+    a->right = r;
+
+    return a;
+}
+
+struct AbstractSyntaxTree* newNumberValue( double d ){
+    struct NumberValue *a = 
+        (struct NumberValue*)malloc(sizeof(struct NumberValue ));
+
+    if( NULL == a ){
+        yyerror("out of space!\n");
+        exit(0);
+    }
+
+    a->nodeType = 'K';
+    a->number = d;
+
+    return (struct AbstractSyntaxTree *)a;
+}
+
+struct AbstractSyntaxTree *newCompare( int compareType, 
+        struct AbstractSyntaxTree *l, struct AbstractSyntaxTree *r){
+    struct AbstractSyntaxTree *a = 
+        (struct AbstractSyntaxTree*)sizeof(struct AbstractSyntaxTree);
+    
+    if( NULL == a ){
+        yyerror("out of space!");
+        exit(0);
+    }
+
+    a->nodeType = '0' + compareType;
+    a->left = l;
+    a->right = r;
+
+    return a;
+}
+
+struct AbstractSyntaxTree* newFunctionCall( int funcType,
+        struct AbstractSyntaxTree *l, struct AbstractSyntaxTree *r){
+    struct FunctionCall *a = 
+        ( struct FunctionCall* )malloc( sizeof(struct FunctionCall) );
+
+}
 
