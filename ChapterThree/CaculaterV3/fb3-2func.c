@@ -97,9 +97,36 @@ struct AbstractSyntaxTree *newCompare( int compareType,
 }
 
 struct AbstractSyntaxTree* newFunctionCall( int funcType,
-        struct AbstractSyntaxTree *l, struct AbstractSyntaxTree *r){
+        struct AbstractSyntaxTree *l){
     struct FunctionCall *a = 
         ( struct FunctionCall* )malloc( sizeof(struct FunctionCall) );
+    
+    if( NULL == a ){
+        yyerror("out of space !");
+        exit(0);
+    }
 
+    a->nodeType = 'F';
+    a->left = l;
+    a->funcType = funcType;
+
+    return ( struct AbstractSyntaxTree* )a;
+}
+
+struct AbstractSyntaxTree* newUserFunctionCall( struct Symbol *s,
+        struct AbstractSyntaxTree* l ){
+    struct UserFunctionCall *userFuncCall = 
+        (struct UserFunctionCall*)malloc( sizeof(struct UserFunctionCall) );
+
+    if( NULL == userFuncCall ){
+        yyerror("out of space!");
+        exit(0);
+    }
+
+    userFuncCall->nodeType = 'C';
+    userFuncCall->left = l;
+    userFuncCall->symbol = s;
+
+    return ( AbstractSyntaxTree * )userFuncCall;
 }
 

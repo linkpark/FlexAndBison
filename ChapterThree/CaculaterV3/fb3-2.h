@@ -67,7 +67,7 @@ struct AbstractSyntaxTree{
 struct FunctionCall{
     int nodeType;
     struct AbstractSyntaxTree *left;
-    struct Symbol *symbol;  
+    enum bifs funcType;  
 };
 
 struct UserFunctionCall{
