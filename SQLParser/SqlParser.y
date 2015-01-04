@@ -1,0 +1,82 @@
+/* 
+ * 针对Mysql子集的语法分析器
+ *  
+ * */
+%{
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+
+void yyerror(char *s, ...);
+void emit(char *s, ...);
+
+%}
+
+%union{
+    int intval;
+    double floatval;
+    char *strval;
+    int subtok;
+}
+
+ /* 名字和字面值 */
+
+%token <strval> NAME
+%token <strval> STRING
+%token <intval> INTNUM
+%token <intval> BOOL
+%token <intval> APPROXNUM
+
+ /* 使用类似@abc 的名字 */
+%token <strval> USERVAR
+ 
+ /* 操作符和优先级 */
+%right ASSIGN
+%left OR
+%left XOR
+%left ANDOP
+%nonassoc IN IS LIKE REGEXP
+%left NOT '!'
+%left BETWEEN
+%left <subtok> COMPARISON /* = <> < > <= >= <=> */
+%left '|'
+%left '&'
+%left <subtok> SHIFT /* << >> */
+%left '+' '-'
+%left '*' '/' '%' MOD
+%left '^'
+%nonassoc UMINUS
+
+
+%token ADD AND ANY ALL ALTER AS ASC
+%token BETWEEN BEGI BIGINT BINARY BOOLEAN BOTH BY
+%token CASCADE CASE CHARACTER CLUSTER CNNOP COMMENT COMMIT
+       CONSISTENT COLUMN COLUMNS CREATE CREATETIME
+       CURRENT_USER CHANGE_OBI SWITCH_CLUSTER
+%token DATE DATETIME DEALLOCATE DECIMAL DEFAULT DELETE DESC DESCRIBE
+       DISTINCT DOUBLE DROP DUAL
+%token ELSE END END_P ERROR EXCEPT EXECUTE EXISTS EXPLAIN
+%token FLOAT FOR FROM FULL FROZEN FORCE
+%token GLOBAL GLOBAL_ALIAS GRANT GROUP
+%token HAVING HINT_BEGIN HINT_END HOTSPOT
+%token IDENTIFIED IF IN INNER INTEGER INTERSECT INSERT INTO IS
+%token JOIN
+%token KEY
+%token LEADING LEFT LIMIT LIKE LOCAL LOCKED
+%token MEDIUMINT MEMORY MOD MODIFYTIME MASTER
+%token NOT NUMERIC
+%token OFFSET ON OR ORDER OPTION OUTER
+%token PARAMETERS PASSWORD PRECISION PREPARE PRIMARY
+%token READ_STATIC REAL RENAME REPLACE RESTRICT PRIVILEGES REVOKE RIGHT
+       ROLLBACK KILL READ_CONSISTENCY
+%token SCHEMA SCOPE SELECT SESSION SESSION_ALIAS
+       SET SHOW SMALLINT SNAPSHOT SPFILE START STATIC SYSTEM STRONG SET_MASTER_CLUSTER SET_SLAVE_CLUSTER SLAVE
+%token TABLE TABLES THEN TIME TIMESTAMP TINYINT TRAILING TRANSACTION TO
+%token UNION UPDATE USER USING
+%token VALUES VARCHAR VARBINARY
+%token WHERE WHEN WITH WORK PROCESSLIST QUERY CONNECTION WEAK
+
+%token ESCAPED
+%token <subtok> EXISTS
+
+

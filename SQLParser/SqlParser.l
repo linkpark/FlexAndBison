@@ -185,7 +185,112 @@ FALSE {
     return BOOL;
 }
 
+'(\\.|''|[^'\n])*' |
+\"(\\.|\"\"|[^"\n])*\" {
+    yylval.strval = strdup( yytext );
+    return STRING;
+}
 
+'(\\.|[^'\n])*$ {
+    yyerror("Unterminated string %s", yytext );
+}
+
+\"(\\.|[^"\n])*$ {
+    yyerror("Unterminated string %s", yytext );
+}
+
+ /* TODO 十六进制字符串 */
+
+ /* TODO 二进制字符串 */
+
+
+ /* 操作符 */
+[-+&~|^/%*(),.;!] {
+    return yytext[0];
+}
+
+"&&" { return ANDOP; }
+"||" { return OR; }
+
+"=" { yylval.subtok = 4; return COMPARISON; }
+"<=>" { yylval.subtok = 12; return COMPARISON; }
+">=" { yylval.subtok = 6; return COMPARISON; }
+">" { yylval.subtok = 2; return COMPARISON; }
+"<=" { yylval.subtok = 5; return COMPARISON; }
+"<" { yylval.subtok = 1; return COMPARISON; }
+"!=" |
+"<>" { yylval.subtok = 3; return COMPARISON; }
+"<<" { yylval.subtok = 1; return SHIFT; }
+">>" { yylval.subtok = 2; return SHIFT; }
+
+":=" { return ASSIGN; }
+ /* 函数 */
+
+SUBSTR(ING)?/"(" { return FSUBSTRING; }
+TRIM/"(" { return FTRIM; }
+DATE_ADD/"(" { return FDATE_ADD; }
+DATE_SUB/"(" { return FDATE_SUB; }
+
+COUNT {
+    int c = input();
+    unput(c);
+    
+    if( c == '(' )
+        return FCOUNT;
+    yylval.strval = strdup( yytext );
+    return NAME;
+}
+
+ /* 名字 */
+[A-Za-z][A-Za-z0-9_]* {
+    yylval.strval = strdup(yytext);
+    return NAME;
+}
+
+`[^`/\\.\n]+` {
+    yylval.strval = strdup( yytext+1 );
+    yylval.strval[yyleng-2] = 0;
+    return NAME;
+}
+
+`[^`\n]*$ {
+    yyerror("unterminated quoted name %s", yytext);
+}
+
+ /*用户变量*/
+@[0-9a-z_.$]+ |
+@\"[^"\n]+\" |
+@`[^`\n]+` |
+@'[^'\n]+' {
+    yylval.strval = strdup( yytext+1 );
+    return USERVAR;
+}
+
+@\"[^"\n]*$ {
+    yyerror("unterminated quoted user variable %s", yytext );
+}
+
+@`[^`\n]*$ {
+    yyerror("unterminated quoted user variable %s", yytext );
+}
+
+@'[^'=\n]*$ {
+    yyerror("unterminated quoted user variable %s", yytext );
+}
+
+ /* 注释 */
+#.* ;
+"--"[ \t].* ;
+
+"/*"   { oldstate = YY_START; BEGIN COMMENT; }
+<COMMENT>"*/" { BEGIN oldstate;}
+<COMMENT>.|\n ;
+<COMMENT><<EOF>> { yyerror("unclosed comment"); }
+
+ /*其他 */
+
+[ \t\n] /* whitedpace */
+. { yyerror("mystery character '%c'", *yytext); }
 
 %%
 
