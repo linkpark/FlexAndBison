@@ -77,6 +77,12 @@ void emit(char *s, ...);
 %token WHERE WHEN WITH WORK PROCESSLIST QUERY CONNECTION WEAK
 
 %token ESCAPED
-%token <subtok> EXISTS
 
+ /*具有特殊语法功能的函数*/
+%token FSUBSTRING
+%token FTRIM
+%token FDATE_ADD FDATE_SUB
+%token FCOUNT
+
+%type <intval> select_opts select_expr_list
 

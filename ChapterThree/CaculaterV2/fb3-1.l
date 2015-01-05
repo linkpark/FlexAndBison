@@ -1,6 +1,7 @@
 /*识别计算器的记号*/
 
-%option noyywrap nodefault yylineno
+%option noyywrap nounput noinput nodefault yylineno case-insensitive
+%option header-file="fb3-1.lex.h"
 %{
 #include "fb3-1.h"
 #include "fb3-1.tab.h"
