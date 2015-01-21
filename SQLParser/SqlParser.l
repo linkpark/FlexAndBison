@@ -1,14 +1,13 @@
 /*
 * sql 子集语法分析器
 **/
-
+%option reentrant bison-bridge bison-locations
 %option noyywrap nodefault yylineno case-insensitive
 %{
 #include "SqlParser.tab.h"
+#include "ParserNode.h"
 #include <stdarg.h>
 #include <string.h>
-
-void yyerror(char *s, ...);
 
 int oldState;
 %}
