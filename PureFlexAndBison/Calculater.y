@@ -1,10 +1,9 @@
-%define api.pure
+%define api.pure full
 %parse-param { struct _ResultPlan *result }
+%locations
 
 %{
 #include "Node.h"
-
-#define YYDEBUG 1
 
 %}
 
@@ -17,11 +16,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
+#include "Calculater.lex.h"
 
-#define YYLEX_PARAM node->yyscanInfo
+extern void yyerror(YYLTYPE *yylloc, ResultPlan *p, const char* s );
 
 %}
-
+%token EOL
 %token <node> NUMBER
 %left '+' '-'
 %left '*' '/'
@@ -57,4 +58,7 @@ expr:
 
 %%
 
+void yyerror(YYLTYPE *yylloc, ResultPlan *p, const char* s ){
+    printf("error!");
+}
 

@@ -1,26 +1,16 @@
 %option noyywrap nodefault nounput noinput yylineno case-insensitive
-%option reentrant bison-bridge bison-locations
+%option bison-bridge bison-locations
 %option header-file="Calculater.lex.h"
-
 %{
 #include "Calculater.tab.h"
+#include "Node.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "Node.h"
-
-extern void yyerror(char *s, ...);
-
-extern struct _node* newNode(NodeType type, int childNumber, ... );
 
 %}
-
-%option extra-type="struct _ResultPlan *"
 
 %%
-%{
-    struct _ResultPlan *result = yyextra;
-%}
 
 [0-9]+ {
     Node *node = newNode( T_NUMBER, 0 );
@@ -36,13 +26,26 @@ extern struct _node* newNode(NodeType type, int childNumber, ... );
 "//".*
 [ \t] { }
 
-<<EOF>> { return END_P;}
-
 . {
-    yyerror("Mestory charactor!\n");
+    printf("Mystery charactor!\n");
 }
 
 %%
 
+
+int parseStmt( ResultPlan *p, const char* pStr, int len ){
+    int ret = -1;
+
+    p->resultTree = NULL;
+    
+    YY_BUFFER_STATE bp;
+    
+    bp = yy_scan_string( pStr );
+    yy_switch_to_buffer( bp );
+    ret = yyparse( p );
+    yy_delete_buffer( bp );
+
+    return ret;
+}
 
 

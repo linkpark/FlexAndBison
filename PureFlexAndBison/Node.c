@@ -5,7 +5,7 @@
 struct _node* newNode( NodeType type, int childNumber){
     Node *node = (Node * )malloc( sizeof( struct _node) );
 
-    if( NULL != node )
+    if( NULL == node )
         perror("node malloc error!\n");
 
     node->type = type;

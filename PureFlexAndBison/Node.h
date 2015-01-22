@@ -30,6 +30,11 @@ typedef struct _ResultPlan{
 #ifdef __cplusplus
 extern "C" {
 #endif
+extern int parseInit( ResultPlan *p );
+
+extern int parseTeminate( ResultPlan *p );
+
+extern int parseStmt( ResultPlan *p , const char* pStr, int len);
 
 extern struct _node* newNode(NodeType type, int childNumber );
 
