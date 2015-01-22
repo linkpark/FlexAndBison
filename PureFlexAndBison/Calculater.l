@@ -20,6 +20,11 @@
     return NUMBER;
 }
 
+"+" {return ADD;}
+"-" {return SUB;}
+"*" {return MUL;}
+"/" {return DIV;}
+
 
 \n { return EOF;}
 

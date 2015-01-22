@@ -22,7 +22,7 @@
 extern void yyerror(YYLTYPE *yylloc, ResultPlan *p, const char* s );
 
 %}
-%token EOL
+%token EOL ADD SUB MUL DIV
 %token <node> NUMBER
 %left '+' '-'
 %left '*' '/'
@@ -34,21 +34,21 @@ extern void yyerror(YYLTYPE *yylloc, ResultPlan *p, const char* s );
 %%
 calclist:
         expr {
-        result->resultTree = $$;
-        YYACCEPT; 
+            result->resultTree = $$;
+            YYACCEPT; 
         } 
         ;
 expr:
-    expr '+' expr{
+    expr ADD expr{
         $$ = mallocNonTerminalNode( OP_ADD, 2, $1, $3);    
     }
-    | expr '-' expr{
+    | expr SUB expr{
         $$ = mallocNonTerminalNode( OP_SUB, 2, $1, $3);
     }
-    | expr '*' expr{
+    | expr MUL expr{
         $$ = mallocNonTerminalNode( OP_MUL, 2 , $1, $3);
     }
-    | expr '/' expr{
+    | expr DIV expr{
         $$ = mallocNonTerminalNode( OP_DIV, 2 , $1, $3);
     }
     | NUMBER{

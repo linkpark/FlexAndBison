@@ -8,7 +8,7 @@ int main(){
     ResultPlan *p ;
     p = (ResultPlan *)malloc( sizeof(struct _ResultPlan ));
     
-    parseStmt( p, "1+1+1", 3);
+    parseStmt( p, "3*1", 3);
     
     printTree( p->resultTree ,0 );    
 }

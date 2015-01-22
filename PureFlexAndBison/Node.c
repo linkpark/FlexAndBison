@@ -24,7 +24,7 @@ void printTree( Node *p , int level){
         printf("    ");
     }
     
-    printf( "|%d\n", p->type);
+    printf( "|%d %d\n", p->type, p->value);
 
     for( i = 0 ; i < p->childNumber ; ++i ){
         printTree( p->children[i], level + 1);
